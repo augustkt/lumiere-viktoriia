@@ -1,0 +1,42 @@
+{
+  "name": "next-Lumiere",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint"
+  },
+  "dependencies": {
+    "@headlessui/react": "^1.7.2",
+    "@tailwindcss/line-clamp": "^0.4.2",
+    "classnames": "^2.3.2",
+    "firebase": "^9.23.0",
+    "lodash.debounce": "^4.0.8",
+    "next": "12.3.1",
+    "next-auth": "^4.12.2",
+    "next-seo": "^5.5.0",
+    "nextjs-progressbar": "^0.0.14",
+    "react": "18.2.0",
+    "react-dom": "18.2.0",
+    "react-swipeable": "^7.0.0",
+    "react-waypoint": "^10.3.0",
+    "slugify": "^1.6.4",
+    "swr": "^1.3.0"
+  },
+  "devDependencies": {
+    "@types/lodash.debounce": "^4.0.7",
+    "@types/node": "18.7.18",
+    "@types/react": "18.0.20",
+    "@types/react-dom": "18.0.6",
+    "autoprefixer": "^10.4.10",
+    "eslint": "8.23.1",
+    "eslint-config-next": "12.3.0",
+    "postcss": "^8.4.16",
+    "prettier": "^2.7.1",
+    "prettier-plugin-tailwindcss": "^0.1.13",
+    "tailwind-scrollbar": "^2.0.1",
+    "tailwindcss": "^3.1.8",
+    "typescript": "4.8.3"
+  }
+}
