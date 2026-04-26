@@ -1,14 +1,16 @@
 import { DefaultSeoProps } from "next-seo";
 
-const siteName = "next-Lumiere";
+const siteName = "Lumiere";
 const title = "Lumiere";
-const description = "Lumiere, explore & discover movies and TV shows.";
+const description = "Lumiere — explore & discover movies and TV shows.";
 const keywords = [
-  "next-Lumiere",
+  "lumiere",
   "movies",
-  "tv",
+  "tv shows",
   "explore movies",
   "discover tv shows",
+  "фільми",
+  "серіали",
 ];
 
 const seoConfig: DefaultSeoProps = {

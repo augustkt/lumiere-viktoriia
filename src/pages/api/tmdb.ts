@@ -9,6 +9,7 @@ export default async function handler(
   const page = Number(req.query?.page ?? 1);
   const genreId = req.query?.genreId ?? null;
   const method = req.query?.method as string | undefined;
+  const lang = (req.query?.lang as string) || undefined;
 
   if (!method || isNaN(page)) {
     res.status(400).json({ message: "Bad request" });
@@ -22,6 +23,12 @@ export default async function handler(
     "getTrendingTvShows",
     "getPopularMovies",
     "getPopularTvShows",
+    "getTopRatedMovies",
+    "getTopRatedTvShows",
+    "getNowPlayingMovies",
+    "getUpcomingMovies",
+    "getOnTheAirTvShows",
+    "getAiringTodayTvShows",
   ] as const;
 
   const genreMethods = [
@@ -30,11 +37,11 @@ export default async function handler(
   ] as const;
 
   const rawData = generalMethods.includes(
-    method as typeof generalMethods[number]
+    method as (typeof generalMethods)[number]
   )
-    ? await TMDB[method as typeof generalMethods[number]](page)
-    : genreMethods.includes(method as typeof genreMethods[number]) && genreId
-    ? await TMDB[method as typeof genreMethods[number]](Number(genreId), page)
+    ? await (TMDB as any)[method](page, lang)
+    : genreMethods.includes(method as (typeof genreMethods)[number]) && genreId
+    ? await (TMDB as any)[method](Number(genreId), page, lang)
     : null;
 
   if (!rawData) {

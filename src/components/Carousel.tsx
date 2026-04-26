@@ -4,12 +4,14 @@ import Image from "next/future/image";
 import cn from "classnames";
 import Link from "next/link";
 import { MediaSingleItemData } from "@/types/tmdb/parsed";
+import { useTranslation } from "@/lib/i18n";
 
 type Props = {
   items: MediaSingleItemData[];
 };
 
 const Carousel = ({ items }: Props) => {
+  const { t } = useTranslation();
   const {
     index,
     setIndex,
@@ -67,10 +69,12 @@ const Carousel = ({ items }: Props) => {
                     <div className="mt-4 md:mt-8">
                       <Link href={`${data.path}?showTrailerModal=true`}>
                         <a
-                          aria-label={`Watch trailer for ${data.title}`}
+                          aria-label={t("carousel.watchTrailerFor", {
+                            title: data.title,
+                          })}
                           className="rounded-lg bg-moviyellow px-2.5 py-1.5 font-semibold text-movidark shadow-2xl md:px-4 md:py-2.5 md:text-lg"
                         >
-                          Watch Trailer
+                          {t("carousel.watchTrailer")}
                         </a>
                       </Link>
                     </div>
@@ -94,7 +98,10 @@ const Carousel = ({ items }: Props) => {
                 }
               )}
               aria-current={index === idx}
-              aria-label={`Go to slide ${idx} of ${items.length}`}
+              aria-label={t("carousel.goToSlide", {
+                idx: idx + 1,
+                total: items.length,
+              })}
             ></button>
           ))}
         </div>
@@ -119,7 +126,7 @@ const Carousel = ({ items }: Props) => {
                 d="M15 19l-7-7 7-7"
               ></path>
             </svg>
-            <span className="sr-only">Previous</span>
+            <span className="sr-only">{t("carousel.previous")}</span>
           </span>
         </button>
 
@@ -143,7 +150,7 @@ const Carousel = ({ items }: Props) => {
                 d="M9 5l7 7-7 7"
               ></path>
             </svg>
-            <span className="sr-only">Next</span>
+            <span className="sr-only">{t("carousel.next")}</span>
           </span>
         </button>
       </div>

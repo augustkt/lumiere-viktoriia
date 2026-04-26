@@ -12,4 +12,5 @@ export enum MediaType {
 export enum UserStateCollection {
   Favorites = "favorites",
   Watchlist = "watchlist",
+  Ratings = "ratings",
 }

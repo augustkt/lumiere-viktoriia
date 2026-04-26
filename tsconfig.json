@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
-    "ignoreDeprecations": "6.0",
     "target": "es6",
+		"ignoreDeprecations": "6.0",
     "lib": ["dom", "dom.iterable", "esnext"],
     "allowJs": true,
     "skipLibCheck": true,
@@ -10,7 +10,7 @@
     "noEmit": true,
     "esModuleInterop": true,
     "module": "esnext",
-    "moduleResolution": "node",
+		"moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
     "jsx": "preserve",
@@ -26,7 +26,8 @@
       "@/data/*": ["src/data/*"],
       "@/components/*": ["src/components/*"],
       "@/layouts/*": ["src/layouts/*"],
-      "@/views/*": ["src/views/*"]
+      "@/views/*": ["src/views/*"],
+      "@/locales/*": ["src/locales/*"]
     }
   },
   "include": [

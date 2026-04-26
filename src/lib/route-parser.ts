@@ -50,7 +50,18 @@ export const isDetailPageSlug = (
       ? (data as MovieDetails).title
       : (data as TvDetails).name;
 
-  return slugData.title === slugify(title);
+  // Also accept slugs generated from the original (English) title — needed
+  // because the URL slug is built from the English title but the localized
+  // title differs when viewing /uk/...
+  const originalTitle =
+    mediaType === MediaType.Movie
+      ? (data as MovieDetails).original_title
+      : (data as TvDetails).original_name;
+
+  return (
+    slugData.title === slugify(title) ||
+    (Boolean(originalTitle) && slugData.title === slugify(originalTitle))
+  );
 };
 
 export const detectGenre = (slugData: SlugData, mediaType: string) => {

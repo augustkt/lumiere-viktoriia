@@ -6,11 +6,14 @@ import React, { Fragment, FocusEvent } from "react";
 import ActiveLink from "./ActiveLink";
 import { Menu, Transition } from "@headlessui/react";
 import SearchBox from "./SearchBox";
+import LanguageSwitcher from "./LanguageSwitcher";
 import { useSession, signIn, signOut } from "next-auth/react";
 import ImageWithShimmer from "./ImageWithShimmer";
+import { useTranslation } from "@/lib/i18n";
 
 const Header = () => {
   const { data: session } = useSession();
+  const { t } = useTranslation();
   const [isMenuOpen, setIsMenuOpen] = React.useState(false);
   const [isSearchFocused, setIsSearchFocused] = React.useState(false);
   const { events: routerEvents } = useRouter();
@@ -83,7 +86,7 @@ const Header = () => {
                 d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"
               />
             </svg>
-            <span className="sr-only">Toggle navigation</span>
+            <span className="sr-only">{t("header.toggleNav")}</span>
           </button>
         </div>
 
@@ -99,31 +102,37 @@ const Header = () => {
           <ul className="flex flex-col md:flex-row md:gap-x-12">
             <li>
               <ActiveLink activeClassName="font-bold" href="/movies">
-                <a className="block py-2">Movies</a>
+                <a className="block py-2">{t("header.movies")}</a>
               </ActiveLink>
             </li>
 
             <li>
               <ActiveLink activeClassName="font-bold" href="/tv">
-                <a className="block py-2">TV Shows</a>
+                <a className="block py-2">{t("header.tvShows")}</a>
               </ActiveLink>
             </li>
 
             <li>
               <span className="block cursor-not-allowed py-2 text-white/50">
-                Discover
+                {t("header.discover")}
               </span>
             </li>
           </ul>
 
           <hr className="my-2 mb-4 opacity-30 md:hidden" />
-          <div className="relative hidden md:ml-8 md:block">
+
+          {/* Language switcher — desktop */}
+          <div className="ml-8 hidden md:block">
+            <LanguageSwitcher />
+          </div>
+
+          <div className="relative hidden md:ml-6 md:block">
             {!(session && session.user) ? (
               <button
                 onClick={() => signIn("google")}
                 className="font-semibold"
               >
-                Sign In
+                {t("header.signIn")}
               </button>
             ) : (
               <Menu>
@@ -186,7 +195,7 @@ const Header = () => {
                     >
                       <Menu.Items className="absolute right-0 top-8 z-10 hidden w-52 rounded-md bg-movidark/95 py-3 md:block">
                         <span className="px-4 font-bold text-white/70">
-                          {session.user!.name ?? "user"}
+                          {session.user!.name ?? t("header.user")}
                         </span>
                         <Link href="/profile" passHref>
                           <Menu.Item>
@@ -199,7 +208,7 @@ const Header = () => {
                                   }
                                 )}
                               >
-                                Profile
+                                {t("header.profile")}
                               </a>
                             )}
                           </Menu.Item>
@@ -216,7 +225,7 @@ const Header = () => {
                                 }
                               )}
                             >
-                              Sign Out
+                              {t("header.signOut")}
                             </button>
                           )}
                         </Menu.Item>
@@ -230,6 +239,11 @@ const Header = () => {
 
           {/* mobile-only */}
           <div className="flex flex-col pb-4 md:hidden">
+            {/* Language switcher — mobile */}
+            <div className="mb-3">
+              <LanguageSwitcher />
+            </div>
+
             {session && session.user ? (
               <div className="flex flex-col gap-y-4">
                 <Link href="/profile">
@@ -260,7 +274,7 @@ const Header = () => {
                       </svg>
                     )}
                     <span className="text-sm font-bold text-white/70">
-                      {session.user.name ?? "user"}
+                      {session.user.name ?? t("header.user")}
                     </span>
                   </a>
                 </Link>
@@ -281,7 +295,7 @@ const Header = () => {
                     />
                   </svg>
                   <span className="text-sm font-semibold text-white/80">
-                    Sign Out
+                    {t("header.signOut")}
                   </span>
                 </button>
               </div>
@@ -291,7 +305,7 @@ const Header = () => {
                   onClick={() => signIn("google")}
                   className="rounded-md bg-moviyellow/80 px-6 py-2 font-semibold text-black"
                 >
-                  Sign In
+                  {t("header.signIn")}
                 </button>
               </div>
             )}

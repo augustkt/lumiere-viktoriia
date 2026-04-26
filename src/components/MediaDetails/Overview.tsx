@@ -1,18 +1,16 @@
 import React from "react";
 import cn from "classnames";
 import { MediaDetailsData } from "@/types/tmdb/parsed";
+import { useTranslation } from "@/lib/i18n";
 
 const Overview = ({ overview }: Pick<MediaDetailsData, "overview">) => {
+  const { t } = useTranslation();
   const [shouldTruncate, setShouldTruncate] = React.useState(false);
   const [readMore, setReadMore] = React.useState(false);
 
   // https://notes.alexkehayias.com/line-clamp-with-react-and-tailwindcss/
-  // Measure the element to calculate the number of lines and
-  // determine whether to truncate
   const measuredRef = React.useCallback((node: any) => {
-    // Before the component mounts the node ref will be null
     if (node?.parentElement) {
-      // Calculate the number of lines based on height
       const elHeight = node.offsetHeight;
       const styles = window.getComputedStyle(node);
       const lineHeight = styles
@@ -28,7 +26,7 @@ const Overview = ({ overview }: Pick<MediaDetailsData, "overview">) => {
 
   return overview ? (
     <div className="flex flex-col gap-y-2">
-      <h3 className="text-lg font-semibold">Overview</h3>
+      <h3 className="text-lg font-semibold">{t("details.overview")}</h3>
       <p
         ref={measuredRef}
         className={cn("text-white/70 transition-all", {
@@ -44,7 +42,9 @@ const Overview = ({ overview }: Pick<MediaDetailsData, "overview">) => {
           onClick={() => setReadMore(true)}
           className="-mt-2 flex items-center gap-x-1"
         >
-          <span className="text-sm font-bold text-white/70">Read more</span>
+          <span className="text-sm font-bold text-white/70">
+            {t("details.readMore")}
+          </span>
           <svg
             aria-hidden="true"
             xmlns="http://www.w3.org/2000/svg"

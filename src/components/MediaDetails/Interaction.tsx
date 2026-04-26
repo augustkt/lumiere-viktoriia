@@ -5,6 +5,7 @@ import React from "react";
 import useSWR from "swr";
 import cn from "classnames";
 import { useSession, signIn } from "next-auth/react";
+import { useTranslation } from "@/lib/i18n";
 
 type Props = {
   mediaId: number;
@@ -19,6 +20,7 @@ const Interaction = ({
   trailerUrl,
   setIsModalOpen,
 }: Props) => {
+  const { t } = useTranslation();
   const { data: session, status } = useSession();
 
   const { data, mutate, error } = useSWR<{
@@ -68,7 +70,6 @@ const Interaction = ({
         revalidate: false,
       });
     } catch (e) {
-      // fail
       console.log(e);
     }
   };
@@ -76,7 +77,7 @@ const Interaction = ({
   return (
     <div className="flex items-center gap-x-4">
       {trailerUrl ? (
-        <Tooltip title="Watch trailer">
+        <Tooltip title={t("details.watchTrailer")}>
           <button
             onClick={() => setIsModalOpen(true)}
             className="inline-flex items-center justify-center rounded-full p-2 ring-1 ring-white/70 transition hover:ring-2 hover:ring-moviyellow"
@@ -99,10 +100,10 @@ const Interaction = ({
       <Tooltip
         title={
           !session
-            ? "Login to add this media to your favorites"
+            ? t("details.loginToFavorites")
             : isInFavorites
-            ? "Remove from favorites"
-            : "Add to favorites"
+            ? t("details.removeFromFavorites")
+            : t("details.addToFavorites")
         }
       >
         <button
@@ -138,10 +139,10 @@ const Interaction = ({
       <Tooltip
         title={
           !session
-            ? "Login to add this media to your watchlist"
+            ? t("details.loginToWatchlist")
             : isInWatchlist
-            ? "Remove from watchlist"
-            : "Add to watchlist"
+            ? t("details.removeFromWatchlist")
+            : t("details.addToWatchlist")
         }
       >
         <button

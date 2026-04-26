@@ -18,7 +18,7 @@ export const getServerSideProps = async (
     if (slugData.id === 0) {
       throw new TMDBIdNotFound();
     }
-    rawData = await TMDB.getMovieDetailsById(slugData.id);
+    rawData = await TMDB.getMovieDetailsById(slugData.id, context.locale);
   } catch (e) {
     if (e instanceof TMDBIdNotFound) {
       return {

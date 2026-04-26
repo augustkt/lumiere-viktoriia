@@ -10,10 +10,14 @@ import React from "react";
 import Loader from "@/components/Loader";
 import { MediaType } from "@/types/general";
 import { NextSeo } from "next-seo";
+import { useTranslation } from "@/lib/i18n";
 
 const Profile = () => {
-  const tabs = ["watchlist", "favorites"];
-  const [activeTab, setActiveTab] = React.useState(tabs[0]);
+  const { t } = useTranslation();
+  const tabs = ["watchlist", "favorites"] as const;
+  const [activeTab, setActiveTab] = React.useState<(typeof tabs)[number]>(
+    tabs[0]
+  );
 
   const { data: session, status } = useSession({
     required: true,
@@ -78,23 +82,21 @@ const Profile = () => {
         revalidate: false,
       });
     } catch (e) {
-      // fail
       console.log(e);
     }
   };
 
-  // When rendering client side don't display anything until loading is complete
   if (status === "loading") return null;
 
   return (
     <>
-      <NextSeo title="Profile" />
+      <NextSeo title={t("profile.title")} />
 
       <Layout>
         <div className="px-2">
-          <h1 className="text-3xl md:text-4xl">Profile</h1>
+          <h1 className="text-3xl md:text-4xl">{t("profile.title")}</h1>
           <div className="mt-2 text-lg md:text-2xl">
-            Welcome Back,&nbsp;
+            {t("profile.welcome")}&nbsp;
             <span className="font-bold">{session.user!.name}</span>
           </div>
         </div>
@@ -116,7 +118,7 @@ const Profile = () => {
                     )
                   }
                 >
-                  <span className="capitalize">{tab}</span>
+                  <span className="capitalize">{t(`profile.${tab}`)}</span>
                 </Tab>
               ))}
             </Tab.List>
@@ -132,7 +134,9 @@ const Profile = () => {
                     >
                       {((tab === tabs[0] ? watchlist : favorites)?.results
                         .length ?? 0) === 0 ? (
-                        <span>You have no media in your {tab}.</span>
+                        <span>
+                          {t("profile.noMedia", { tab: t(`profile.${tab}`) })}
+                        </span>
                       ) : (
                         <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(150px,1fr))]">
                           {(tab === tabs[0]
@@ -156,7 +160,7 @@ const Profile = () => {
                                       <path d="M9.5 13a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0zm0-5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0z" />
                                     </svg>
                                   </Menu.Button>
-                                  <Menu.Items className="absolute top-10 right-0 z-40 w-32 rounded-md bg-black shadow-lg ring-1 ring-white/50">
+                                  <Menu.Items className="absolute top-10 right-0 z-40 w-40 rounded-md bg-black shadow-lg ring-1 ring-white/50">
                                     <Menu.Item>
                                       <button
                                         onClick={() =>
@@ -168,7 +172,9 @@ const Profile = () => {
                                         }
                                         className="w-full px-4 py-3 text-start text-xs font-semibold text-white/70 hover:bg-white/20 hover:text-white"
                                       >
-                                        Remove from {tab}
+                                        {t("profile.removeFrom", {
+                                          tab: t(`profile.${tab}`),
+                                        })}
                                       </button>
                                     </Menu.Item>
                                   </Menu.Items>

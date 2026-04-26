@@ -11,6 +11,7 @@ import {
 } from "@/types/tmdb/parsed";
 import useSWR from "swr";
 import { fetcher } from "@/utils/util";
+import { useTranslation } from "@/lib/i18n";
 
 interface SearchBoxProps {
   onFocus: (e: FocusEvent<HTMLInputElement>) => void;
@@ -19,11 +20,12 @@ interface SearchBoxProps {
 
 function SearchBox({ onFocus, onBlur }: SearchBoxProps) {
   const router = useRouter();
+  const { t, locale } = useTranslation();
   const [query, setQuery] = React.useState("");
   const [selectedItem, setSelectedItem] = React.useState<MediaSingleItemData>();
 
   const { data: searchData, error } = useSWR<MediaListingInitialData>(
-    query ? `/api/search?q=${query}` : null,
+    query ? `/api/search?q=${query}&lang=${locale}` : null,
     fetcher
   );
   const isLoading = !error && !searchData;
@@ -69,7 +71,7 @@ function SearchBox({ onFocus, onBlur }: SearchBoxProps) {
               clipRule="evenodd"
             ></path>
           </svg>
-          <span className="sr-only">Search icon</span>
+          <span className="sr-only">{t("search.icon")}</span>
         </div>
 
         <Combobox.Input
@@ -79,7 +81,7 @@ function SearchBox({ onFocus, onBlur }: SearchBoxProps) {
           onBlur={onBlur}
           displayValue={(item: MediaSingleItemData) => item?.title}
           className="block w-full rounded-full bg-white/10 p-1 pl-10 text-white/70 ring-white/30 focus:outline-none focus:ring-1 sm:text-sm md:py-1.5"
-          placeholder="Find Movies &#38; TV"
+          placeholder={t("search.placeholder")}
         />
 
         <Transition
@@ -93,7 +95,9 @@ function SearchBox({ onFocus, onBlur }: SearchBoxProps) {
               <></>
             ) : !searchData || (searchData?.results?.length ?? 0) === 0 ? (
               <span className="block p-4 text-sm text-white/70">
-                {Boolean(query) && isLoading ? "Loading..." : "Nothing found"}
+                {Boolean(query) && isLoading
+                  ? t("search.loading")
+                  : t("search.nothingFound")}
               </span>
             ) : (
               searchData.results.map((item) => (
@@ -122,8 +126,8 @@ function SearchBox({ onFocus, onBlur }: SearchBoxProps) {
                         {Boolean(item.mediaType) && Boolean(item.year) ? (
                           <span className="block text-sm text-white/50">
                             {item.mediaType === MediaType.Movie
-                              ? "Movie"
-                              : "TV Show"}
+                              ? t("search.movie")
+                              : t("search.tvShow")}
                             &nbsp; • {item.year}
                           </span>
                         ) : null}

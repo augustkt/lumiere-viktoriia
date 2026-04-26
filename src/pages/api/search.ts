@@ -8,13 +8,14 @@ export default async function handler(
   res: NextApiResponse
 ) {
   const query = req.query?.q;
+  const lang = (req.query?.lang as string) || undefined;
 
   if (!query) {
     res.status(400).json({ message: "Bad request" });
     return;
   }
 
-  const rawMediaData = await TMDB.searchMulti(req.query.q as string);
+  const rawMediaData = await TMDB.searchMulti(req.query.q as string, 1, lang);
 
   res.status(200).json(
     prepareMediaListData({

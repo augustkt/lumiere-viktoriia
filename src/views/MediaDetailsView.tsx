@@ -4,17 +4,19 @@ import {
   MediaBasics,
   Status,
   Genres,
-  Rating,
+  UserRating,
   Overview,
   Properties,
   Cast,
   Interaction,
 } from "@/components/MediaDetails";
+import Recommendations from "@/components/MediaDetails/Recommendations";
 import ImageWithShimmer from "@/components/ImageWithShimmer";
 import LayoutWithBgFull from "@/layouts/LayoutWithBgFull";
 import { Dialog, Transition } from "@headlessui/react";
 import { getYearFormatted, pick } from "@/utils/util";
 import { MediaDetailsData } from "@/types/tmdb/parsed";
+import { useTranslation } from "@/lib/i18n";
 
 interface MediaDetailsViewProps {
   detailsData: MediaDetailsData;
@@ -22,6 +24,7 @@ interface MediaDetailsViewProps {
 
 function MediaDetailsView({ detailsData }: MediaDetailsViewProps) {
   const router = useRouter();
+  const { t } = useTranslation();
 
   const [isModalOpen, setIsModalOpen] = React.useState(false);
   const closeModal = () => setIsModalOpen(false);
@@ -29,18 +32,13 @@ function MediaDetailsView({ detailsData }: MediaDetailsViewProps) {
   React.useEffect(() => {
     if (router.isReady && Boolean(router.query.showTrailerModal)) {
       setIsModalOpen(true);
-      const url = new URL(router.asPath, "http://n"); // dummy base
+      const url = new URL(router.asPath, "http://n");
       const params = new URLSearchParams(url.search);
       params.delete("showTrailerModal");
       url.search = params.toString();
       const newPath = url.pathname + url.search;
-
       window.history.replaceState(
-        {
-          ...window.history.state,
-          as: newPath,
-          url: newPath,
-        },
+        { ...window.history.state, as: newPath, url: newPath },
         "",
         newPath
       );
@@ -74,8 +72,16 @@ function MediaDetailsView({ detailsData }: MediaDetailsViewProps) {
             <div className="flex flex-wrap items-center gap-4">
               <Status {...pick(detailsData, "isEnded", "isReleased")} />
               <Genres genres={detailsData.genres} />
-              <Rating {...pick(detailsData, "isReleased", "rating")} />
             </div>
+
+            <UserRating
+              mediaId={detailsData.id}
+              mediaType={detailsData.mediaType}
+              mediaTitle={detailsData.title}
+              rating={detailsData.rating}
+              voteCount={detailsData.voteCount}
+              isReleased={detailsData.isReleased}
+            />
 
             <Interaction
               mediaId={detailsData.id}
@@ -88,7 +94,13 @@ function MediaDetailsView({ detailsData }: MediaDetailsViewProps) {
             <Properties {...pick(detailsData, "creator", "director")} />
           </div>
         </div>
+
         <Cast {...pick(detailsData, "title", "cast")} />
+
+        <Recommendations
+          recommendations={detailsData.recommendations ?? []}
+          similar={detailsData.similar ?? []}
+        />
       </LayoutWithBgFull>
 
       <Transition.Root show={isModalOpen} as={Fragment}>
@@ -117,7 +129,9 @@ function MediaDetailsView({ detailsData }: MediaDetailsViewProps) {
             leaveTo="opacity-0 scale-95"
           >
             <Dialog.Panel className="relative w-full max-w-xl overflow-hidden rounded-xl bg-movidark py-4 px-8 shadow-2xl ring-1 ring-white/5">
-              <Dialog.Title className="text-lg font-bold">{`${detailsData.title} Trailer`}</Dialog.Title>
+              <Dialog.Title className="text-lg font-bold">
+                {t("details.trailer", { title: detailsData.title })}
+              </Dialog.Title>
               <button className="absolute right-4 top-4" onClick={closeModal}>
                 <svg
                   aria-hidden="true"
@@ -134,7 +148,7 @@ function MediaDetailsView({ detailsData }: MediaDetailsViewProps) {
                     d="M6 18L18 6M6 6l12 12"
                   />
                 </svg>
-                <span className="sr-only">Close the modal</span>
+                <span className="sr-only">{t("details.close")}</span>
               </button>
               {detailsData.trailerUrl && (
                 <iframe

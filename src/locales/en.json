@@ -1,0 +1,129 @@
+{
+  "header": {
+    "movies": "Movies",
+    "tvShows": "TV Shows",
+    "discover": "Discover",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "profile": "Profile",
+    "toggleNav": "Toggle navigation",
+    "user": "user"
+  },
+  "search": {
+    "placeholder": "Find Movies & TV",
+    "icon": "Search icon",
+    "loading": "Loading...",
+    "nothingFound": "Nothing found",
+    "movie": "Movie",
+    "tvShow": "TV Show"
+  },
+  "sidebar": {
+    "movies": "Movies",
+    "tvShows": "TV Shows",
+    "trending": "Trending",
+    "popular": "Popular",
+    "topRated": "Top Rated",
+    "nowPlaying": "Now Playing",
+    "upcoming": "Upcoming",
+    "onTheAir": "On The Air",
+    "airingToday": "Airing Today",
+    "genres": "Genres",
+    "all": "All",
+    "sortBy": "Sort by"
+  },
+  "sort": {
+    "popularity": "Popularity",
+    "rating": "Rating",
+    "releaseDate": "Release date",
+    "title": "Title"
+  },
+  "carousel": {
+    "watchTrailer": "Watch Trailer",
+    "watchTrailerFor": "Watch trailer for {title}",
+    "previous": "Previous",
+    "next": "Next",
+    "goToSlide": "Go to slide {idx} of {total}"
+  },
+  "details": {
+    "overview": "Overview",
+    "readMore": "Read more",
+    "creator": "Creator",
+    "director": "Director",
+    "castOf": "Cast of {title}",
+    "watchTrailer": "Watch trailer",
+    "trailer": "{title} Trailer",
+    "close": "Close the modal",
+    "loginToFavorites": "Login to add this media to your favorites",
+    "removeFromFavorites": "Remove from favorites",
+    "addToFavorites": "Add to favorites",
+    "loginToWatchlist": "Login to add this media to your watchlist",
+    "removeFromWatchlist": "Remove from watchlist",
+    "addToWatchlist": "Add to watchlist",
+    "recommendations": "More like this",
+    "similar": "Similar titles",
+    "noRecommendations": "No recommendations yet"
+  },
+  "cast": {
+    "voice": "voice",
+    "uncredited": "uncredited",
+    "archiveFootage": "archive footage",
+    "previous": "Previous Page",
+    "next": "Next Page"
+  },
+  "person": {
+    "biography": "Biography",
+    "born": "Born",
+    "died": "Died",
+    "placeOfBirth": "Place of birth",
+    "knownFor": "Known for",
+    "filmography": "Filmography",
+    "knownForDepartment": "Known for",
+    "noBiography": "No biography available."
+  },
+  "status": {
+    "ended": "Ended",
+    "onAir": "On Air",
+    "comingSoon": "Coming Soon"
+  },
+  "rating": {
+    "imdbRating": "TMDB RATING",
+    "yourRating": "YOUR RATING",
+    "rate": "Rate",
+    "rateThisTitle": "Rate this title",
+    "rateThisOf": "Rate {title}",
+    "save": "Save",
+    "remove": "Remove rating",
+    "cancel": "Cancel",
+    "outOf": "/ 10",
+    "votes": "{count} votes",
+    "loginToRate": "Sign in to rate"
+  },
+  "profile": {
+    "title": "Profile",
+    "welcome": "Welcome Back,",
+    "watchlist": "watchlist",
+    "favorites": "favorites",
+    "ratings": "ratings",
+    "noMedia": "You have no media in your {tab}.",
+    "removeFrom": "Remove from {tab}"
+  },
+  "errors": {
+    "notFound": "404 | Content Not Found",
+    "serverError": "500 | Server Error"
+  },
+  "footer": {
+    "dataBy": "Movie data provided by",
+    "tmdb": "The Movie Database (TMDB)"
+  },
+  "languages": { "en": "English", "uk": "Українська" },
+  "genres": {
+    "28": "Action", "12": "Adventure", "16": "Animation", "35": "Comedy",
+    "80": "Crime", "99": "Documentary", "18": "Drama", "10751": "Family",
+    "14": "Fantasy", "36": "History", "27": "Horror", "10402": "Music",
+    "9648": "Mystery", "10749": "Romance", "878": "Science Fiction",
+    "10770": "TV Movie", "53": "Thriller", "10752": "War", "37": "Western",
+    "10759": "Action & Adventure", "10762": "Kids", "10763": "News",
+    "10764": "Reality", "10765": "Sci-Fi & Fantasy", "10766": "Soap",
+    "10767": "Talk", "10768": "War & Politics"
+  }
+}
