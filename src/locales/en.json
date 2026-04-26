@@ -28,7 +28,10 @@
     "onTheAir": "On The Air",
     "airingToday": "Airing Today",
     "genres": "Genres",
-    "all": "All",
+    "all": "All"
+  },
+  "sortBar": {
+    "show": "Show",
     "sortBy": "Sort by"
   },
   "sort": {
@@ -96,7 +99,8 @@
     "cancel": "Cancel",
     "outOf": "/ 10",
     "votes": "{count} votes",
-    "loginToRate": "Sign in to rate"
+    "loginToRate": "Sign in to rate",
+    "autoFavoriteHint": "Titles rated 7+ are automatically saved to your favorites"
   },
   "profile": {
     "title": "Profile",
@@ -105,7 +109,9 @@
     "favorites": "favorites",
     "ratings": "ratings",
     "noMedia": "You have no media in your {tab}.",
-    "removeFrom": "Remove from {tab}"
+    "removeFrom": "Remove from {tab}",
+    "forYou": "For You",
+    "forYouHint": "Recommended based on your favorites and high ratings"
   },
   "errors": {
     "notFound": "404 | Content Not Found",

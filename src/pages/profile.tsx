@@ -13,7 +13,7 @@ import { NextSeo } from "next-seo";
 import { useTranslation } from "@/lib/i18n";
 
 const Profile = () => {
-  const { t } = useTranslation();
+  const { t, locale } = useTranslation();
   const tabs = ["watchlist", "favorites"] as const;
   const [activeTab, setActiveTab] = React.useState<(typeof tabs)[number]>(
     tabs[0]
@@ -30,17 +30,25 @@ const Profile = () => {
     data: watchlist,
     mutate: mutateWatchlist,
     error: watchlistError,
-  } = useSWR<{
-    results: MediaSingleItemData[];
-  }>(session && activeTab === tabs[0] ? `/api/watchlist` : null, fetcher);
+  } = useSWR<{ results: MediaSingleItemData[] }>(
+    session && activeTab === tabs[0] ? `/api/watchlist` : null,
+    fetcher
+  );
 
   const {
     data: favorites,
     mutate: mutateFavorites,
     error: favoritesError,
-  } = useSWR<{
+  } = useSWR<{ results: MediaSingleItemData[] }>(
+    session && activeTab === tabs[1] ? `/api/favorites` : null,
+    fetcher
+  );
+
+  // Personal recommendations derived from favorites + top-rated
+  const { data: forYou } = useSWR<{
     results: MediaSingleItemData[];
-  }>(session && activeTab === tabs[1] ? `/api/favorites` : null, fetcher);
+    seeds: number;
+  }>(session ? `/api/personal-recommendations?lang=${locale}` : null, fetcher);
 
   const isWatchlistLoading =
     activeTab === tabs[0] && !watchlist && !watchlistError;
@@ -53,27 +61,21 @@ const Profile = () => {
     mediaId: number
   ) => {
     const data = itemType === "favorites" ? favorites! : watchlist!;
-
     const optimisticData = {
       ...data,
       results: data.results.filter(
         (item) => !(item.id === mediaId && item.mediaType === mediaType)
       ),
     };
-
     const mutate = itemType === "favorites" ? mutateFavorites : mutateWatchlist;
     const request = async () => {
       const response = await fetch(`/api/${itemType}`, {
         method: "DELETE",
-        headers: {
-          "Content-Type": "application/json",
-        },
+        headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ mediaType, mediaId }),
       });
-
       return response.ok ? optimisticData : data;
     };
-
     try {
       await mutate(request(), {
         optimisticData,
@@ -100,6 +102,24 @@ const Profile = () => {
             <span className="font-bold">{session.user!.name}</span>
           </div>
         </div>
+
+        {/* For You — only render when there are recs */}
+        {forYou && forYou.results.length > 0 && (
+          <div className="mt-10 px-2">
+            <h2 className="mb-2 text-2xl font-bold">{t("profile.forYou")}</h2>
+            <p className="mb-4 text-sm text-white/60">
+              {t("profile.forYouHint")}
+            </p>
+            <div className="grid grid-cols-2 gap-x-3 gap-y-6 sm:grid-cols-[repeat(auto-fill,minmax(150px,1fr))]">
+              {forYou.results.map((item) => (
+                <SingleItem
+                  key={`${item.mediaType}-${item.id}`}
+                  item={item}
+                />
+              ))}
+            </div>
+          </div>
+        )}
 
         <div className="w-full px-2 py-10">
           <Tab.Group onChange={(index) => setActiveTab(tabs[index])}>

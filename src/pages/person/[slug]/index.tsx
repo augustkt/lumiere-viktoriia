@@ -4,6 +4,7 @@ import Image from "next/future/image";
 import Link from "next/link";
 import * as TMDB from "@/lib/tmdb";
 import { TMDBIdNotFound } from "@/lib/tmdb";
+import { generateInitialsAvatar } from "@/lib/avatar";
 import { InferGetServerSidePropsType, MediaType } from "@/types/general";
 import { slugify } from "@/utils/util";
 import LayoutWithoutSidebar from "@/layouts/LayoutWithoutSidebar";
@@ -24,7 +25,6 @@ export const getServerSideProps = async (
     throw e;
   }
 
-  // Combined credits sorted by popularity, deduped, top 18
   const credits = (raw.combined_credits?.cast ?? [])
     .filter((c: any) => c.poster_path)
     .sort((a: any, b: any) => (b.popularity ?? 0) - (a.popularity ?? 0))
@@ -57,7 +57,7 @@ export const getServerSideProps = async (
     knownForDepartment: raw.known_for_department ?? null,
     profileImageUrl: raw.profile_path
       ? TMDB.getProfileImageAbsoluteUrl(raw.profile_path)
-      : TMDB.DEFAULT_PROFILE_IMAGE_URI,
+      : generateInitialsAvatar(raw.name ?? "?"),
     credits,
   };
 
@@ -77,7 +77,10 @@ const PersonPage = ({
 
   return (
     <>
-      <NextSeo title={person.name} description={person.biography.slice(0, 160)} />
+      <NextSeo
+        title={person.name}
+        description={person.biography.slice(0, 160)}
+      />
       <LayoutWithoutSidebar>
         <div className="flex flex-col gap-12 md:flex-row">
           <div className="mx-auto h-[clamp(200px,25vw,300px)] w-[clamp(200px,25vw,300px)] flex-shrink-0 md:mx-0">
@@ -86,14 +89,14 @@ const PersonPage = ({
               alt={person.name}
               width={300}
               height={300}
-              className="h-full w-full rounded-full object-cover shadow-2xl"
+              className="h-full w-full rounded-full object-cover shadow-2xl ring-4 ring-white/10"
             />
           </div>
 
           <div className="flex flex-col gap-y-4">
-            <h1 className="text-4xl font-bold">{person.name}</h1>
+            <h1 className="text-4xl font-bold md:text-5xl">{person.name}</h1>
 
-            <div className="grid gap-x-8 gap-y-2 sm:grid-cols-2">
+            <div className="grid gap-x-8 gap-y-3 sm:grid-cols-2">
               {person.knownForDepartment && (
                 <div>
                   <span className="block text-xs uppercase tracking-wider text-white/60">
@@ -129,7 +132,9 @@ const PersonPage = ({
             </div>
 
             <div className="mt-2">
-              <h2 className="mb-2 text-xl font-bold">{t("person.biography")}</h2>
+              <h2 className="mb-2 text-xl font-bold">
+                {t("person.biography")}
+              </h2>
               <p className="whitespace-pre-line text-white/80">
                 {person.biography || t("person.noBiography")}
               </p>
@@ -139,7 +144,9 @@ const PersonPage = ({
 
         {person.credits.length > 0 && (
           <div className="mt-12">
-            <h2 className="mb-6 text-2xl font-bold">{t("person.filmography")}</h2>
+            <h2 className="mb-6 text-2xl font-bold">
+              {t("person.filmography")}
+            </h2>
             <div className="grid grid-cols-2 gap-x-4 gap-y-6 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-6">
               {person.credits.map((c: any) => (
                 <Link key={`${c.mediaType}-${c.id}`} href={c.path}>

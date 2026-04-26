@@ -16,6 +16,11 @@ type Props = {
   isReleased: boolean;
 };
 
+// Threshold: if user rates a title at 7 or above, we automatically
+// add it to their favorites list. This is communicated as
+// "Любимые = высокие оценки" in the UI.
+const FAVORITE_RATING_THRESHOLD = 7;
+
 const StarIcon = ({ className }: { className?: string }) => (
   <svg
     aria-hidden="true"
@@ -75,9 +80,7 @@ const UserRating: React.FC<Props> = ({
     mediaType: string;
     rating: number | null;
   }>(
-    session
-      ? `/api/rating?mediaType=${mediaType}&mediaId=${mediaId}`
-      : null,
+    session ? `/api/rating?mediaType=${mediaType}&mediaId=${mediaId}` : null,
     fetcher
   );
 
@@ -103,6 +106,19 @@ const UserRating: React.FC<Props> = ({
       });
       if (res.ok) {
         await mutate({ mediaId, mediaType, rating: newRating }, false);
+
+        // If the rating is high enough, also auto-add to favorites.
+        // We don't auto-remove on low ratings — that's the user's choice.
+        if (newRating >= FAVORITE_RATING_THRESHOLD) {
+          fetch("/api/favorites", {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ mediaType, mediaId }),
+          }).catch(() => {
+            /* non-fatal */
+          });
+        }
+
         setIsOpen(false);
       }
     } finally {
@@ -127,13 +143,11 @@ const UserRating: React.FC<Props> = ({
     }
   };
 
-  // If movie isn't released and has no rating, hide the whole block.
   if (!isReleased && !rating) return null;
 
   return (
     <>
       <div className="flex items-stretch gap-x-8">
-        {/* TMDB / Aggregate rating */}
         {Boolean(rating) && (
           <div className="flex flex-col">
             <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
@@ -158,7 +172,6 @@ const UserRating: React.FC<Props> = ({
           </div>
         )}
 
-        {/* Your rating */}
         <div className="flex flex-col">
           <span className="text-xs font-semibold uppercase tracking-wider text-white/70">
             {t("rating.yourRating")}
@@ -191,7 +204,6 @@ const UserRating: React.FC<Props> = ({
         </div>
       </div>
 
-      {/* Rating modal — IMDb-style 10 stars */}
       <Transition.Root show={isOpen} as={Fragment}>
         <Dialog
           onClose={closeModal}
@@ -222,7 +234,6 @@ const UserRating: React.FC<Props> = ({
                 {t("rating.rateThisOf", { title: mediaTitle })}
               </Dialog.Title>
 
-              {/* Big star showing current selection */}
               <div className="my-4 flex items-center justify-center">
                 <div className="relative">
                   <StarIcon className="h-24 w-24 fill-blue-500/90" />
@@ -232,9 +243,8 @@ const UserRating: React.FC<Props> = ({
                 </div>
               </div>
 
-              {/* 10 stars row */}
               <div
-                className="mb-4 flex items-center justify-center gap-x-0.5"
+                className="mb-2 flex items-center justify-center gap-x-0.5"
                 onMouseLeave={() => setHovered(null)}
               >
                 {Array.from({ length: 10 }, (_, i) => i + 1).map((value) => {
@@ -251,7 +261,9 @@ const UserRating: React.FC<Props> = ({
                       onClick={() => submitRating(value)}
                       className={cn(
                         "p-0.5 transition disabled:opacity-50",
-                        active ? "text-blue-400" : "text-white/30 hover:text-blue-300"
+                        active
+                          ? "text-blue-400"
+                          : "text-white/30 hover:text-blue-300"
                       )}
                       aria-label={`${value} ${t("rating.outOf")}`}
                     >
@@ -260,6 +272,11 @@ const UserRating: React.FC<Props> = ({
                   );
                 })}
               </div>
+
+              {/* Hint that high ratings auto-favorite */}
+              <p className="mb-4 text-center text-xs text-white/50">
+                {t("rating.autoFavoriteHint")}
+              </p>
 
               <div className="flex items-center justify-between gap-x-3 pt-2">
                 {userRating ? (

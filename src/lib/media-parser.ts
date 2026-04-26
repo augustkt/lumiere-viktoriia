@@ -1,5 +1,6 @@
 import * as TMDB from "@/lib/tmdb";
 import { formatMinutes, slugify } from "@/utils/util";
+import { generateInitialsAvatar } from "@/lib/avatar";
 import { MovieDetails, TvDetails } from "@/types/tmdb/detail";
 import { Movies, MoviesResult, TvResult, TvShows } from "@/types/tmdb/popular";
 import { MediaType } from "@/types/general";
@@ -161,9 +162,11 @@ export const parseMediaDetailsData = (data: MovieDetails | TvDetails) => {
       id: cast.id,
       name: cast.name,
       character: cast.character,
+      // Beautiful initials gradient when TMDB has no headshot,
+      // instead of the generic gray silhouette.
       profileImageUrl: cast.profile_path
         ? TMDB.getProfileImageAbsoluteUrl(cast.profile_path)
-        : TMDB.DEFAULT_PROFILE_IMAGE_URI,
+        : generateInitialsAvatar(cast.name ?? ""),
     })),
     recommendations: parseRelatedItems(
       (data as any).recommendations,

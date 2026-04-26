@@ -1,4 +1,5 @@
 import ImageWithShimmer from "@/components/ImageWithShimmer";
+import Link from "next/link";
 import React from "react";
 import cn from "classnames";
 import useScroll from "@/hooks/useScroll";
@@ -8,9 +9,6 @@ import { useTranslation } from "@/lib/i18n";
 const Cast = ({ title, cast }: Pick<MediaDetailsData, "title" | "cast">) => {
   const { t } = useTranslation();
 
-  // TMDB returns the character name in its source language and just appends
-  // "(voice)" / "(uncredited)" / etc. in English. We can't translate the name
-  // itself, but we can swap those English suffixes for localized ones.
   const localizeCharacter = (raw: string): string => {
     if (!raw) return raw;
     return raw
@@ -86,26 +84,34 @@ const Cast = ({ title, cast }: Pick<MediaDetailsData, "title" | "cast">) => {
                 key={person.id}
                 className="flex w-[25vw] snap-start flex-col gap-y-2 focus:outline-none sm:w-[150px]"
               >
-                <a
-                  href={`/person/${person.id}`}
-                  className="block focus:outline-none"
-                >
-                  <ImageWithShimmer
-                    alt={person.name}
-                    src={person.profileImageUrl}
-                    tabIndex={0}
-                    width="150"
-                    height="150"
-                    className="h-[25vw] w-full rounded-full object-cover shadow-2xl transition hover:brightness-125 focus:outline-none focus:ring-4 sm:h-[150px]"
-                  />
-                </a>
+                {/*
+                  Use next/link so locale persists (uk → /uk/person/:id).
+                  Plain <a href> caused a full page reload that lost the
+                  active locale.
+                */}
+                <Link href={`/person/${person.id}`}>
+                  <a className="block focus:outline-none">
+                    <ImageWithShimmer
+                      alt={person.name}
+                      src={person.profileImageUrl}
+                      tabIndex={0}
+                      width="150"
+                      height="150"
+                      className="h-[25vw] w-full rounded-full object-cover shadow-2xl ring-2 ring-transparent transition hover:ring-moviyellow focus:outline-none focus:ring-4 focus:ring-moviyellow sm:h-[150px]"
+                    />
+                  </a>
+                </Link>
                 <div className="flex flex-col text-center">
-                  <span
-                    title={person.name}
-                    className="truncate text-xs font-bold md:text-sm"
-                  >
-                    {person.name}
-                  </span>
+                  <Link href={`/person/${person.id}`}>
+                    <a className="block hover:underline">
+                      <span
+                        title={person.name}
+                        className="block truncate text-xs font-bold md:text-sm"
+                      >
+                        {person.name}
+                      </span>
+                    </a>
+                  </Link>
                   <span
                     title={person.character}
                     className="truncate text-xs text-white/70"
