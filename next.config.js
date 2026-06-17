@@ -4,7 +4,14 @@ module.exports = {
   swcMinify: true,
   images: {
     unoptimized: true,
-    domains: ["*.themoviedb.org", "*.tmdb.org", "*.googleusercontent.com"],
+    // next/image does NOT support wildcards in `domains` — they must be exact
+    // hostnames. Use remotePatterns for subdomain wildcards instead.
+    remotePatterns: [
+      { protocol: "https", hostname: "image.tmdb.org" },
+      { protocol: "https", hostname: "**.themoviedb.org" },
+      { protocol: "https", hostname: "**.tmdb.org" },
+      { protocol: "https", hostname: "**.googleusercontent.com" },
+    ],
   },
   i18n: {
     locales: ["en", "uk"],

@@ -20,15 +20,27 @@ const toBase64 = (str: string) =>
     ? Buffer.from(str).toString("base64")
     : window.btoa(str);
 
-const ImageWithShimmer = (props: React.ComponentProps<typeof Image>) => (
-  // eslint-disable-next-line
-  <Image
-    placeholder="blur"
-    blurDataURL={`data:image/svg+xml;base64,${toBase64(
-      shimmer(Number(props.width), Number(props.height))
-    )}`}
-    {...props}
-  />
-);
+const ImageWithShimmer = (props: React.ComponentProps<typeof Image>) => {
+  // Data-URI sources (e.g. the generated initials-gradient SVG) must not use
+  // the blur placeholder — next/future/image can fail to paint them otherwise.
+  const isDataUri =
+    typeof props.src === "string" && props.src.startsWith("data:");
+
+  if (isDataUri) {
+    // eslint-disable-next-line
+    return <Image {...props} />;
+  }
+
+  return (
+    // eslint-disable-next-line
+    <Image
+      placeholder="blur"
+      blurDataURL={`data:image/svg+xml;base64,${toBase64(
+        shimmer(Number(props.width), Number(props.height))
+      )}`}
+      {...props}
+    />
+  );
+};
 
 export default ImageWithShimmer;
