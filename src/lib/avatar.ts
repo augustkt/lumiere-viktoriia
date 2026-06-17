@@ -50,5 +50,5 @@ export const generateInitialsAvatar = (name: string): string => {
       font-size="56" font-weight="700" fill="white" letter-spacing="2">${initials}</text>
   </svg>`;
 
-  return `data:image/svg+xml;utf8,${encodeURIComponent(svg)}`;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 };
