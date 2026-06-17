@@ -80,8 +80,6 @@ export default async function handler(
       }
 
       try {
-        // Snapshot of media info — same idea as favorites/watchlist,
-        // so a future "My Ratings" page can render without TMDB calls.
         const rawMediaData = await (mediaType === MediaType.Movie
           ? TMDB.getMovieDetailsById(mediaId)
           : TMDB.getTvShowDetailsById(mediaId));

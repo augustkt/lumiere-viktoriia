@@ -35,7 +35,7 @@ export const getBackdropImageAbsoluteUrl = (relativePath: string) =>
 export const getPosterImageAbsoluteUrl = (relativePath: string) =>
   `https://image.tmdb.org/t/p/w300_and_h450_bestv2${relativePath}`;
 export const getProfileImageAbsoluteUrl = (relativePath: string) =>
-  `https://image.tmdb.org/t/p/w150_and_h150_face${relativePath}`;
+  `https://image.tmdb.org/t/p/w185${relativePath}`;
 
 export const tmdbLanguageFromLocale = (locale?: string): string => {
   switch (locale) {

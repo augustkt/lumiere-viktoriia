@@ -39,7 +39,7 @@ export default async function handler(
     UserStateCollection.Watchlist
   );
 
-  // media can be same id in TMDB API depending media type
+ 
   const favoritesMediaDocRef = doc(
     favoritesCollectionRef,
     `${mediaType}-${mediaId}`

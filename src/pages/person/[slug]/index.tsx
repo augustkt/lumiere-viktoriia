@@ -157,6 +157,7 @@ const PersonPage = ({
                         alt={c.title}
                         width={300}
                         height={450}
+												unoptimized
                         className="h-auto w-full object-cover"
                       />
                     </div>
